@@ -6,18 +6,22 @@
 
 typedef struct
 {
-	LIST	airportsArray;
+	LIST airports;
+	LIST airlines;
+} AirportManager;
 
-}AirportManager;
-
-int     initManager(AirportManager* pManager, const char* fileName);
+int     initManager(AirportManager* pManager);
+int     initManagerFromTextFile(AirportManager* pManager, const char* fileName);
 int		loadAirportFromFile(Airport* pAir, FILE* pFile);
 int     saveManagerToFile(const AirportManager* pManager, const char* fileName);
 int		addAirport(AirportManager* pManager);
-int		initAirport(Airport* pPort, AirportManager* pManager);
+// int		initAirport(Airport* pPort, AirportManager* pManager);
+int		addAirline(AirportManager* pManager);
+int addPlaneToManager(AirportManager* pManager);
 Airport* findAirportByCode(const AirportManager* pManager, const char* code);
 int		checkUniqeCode(const char* code, const AirportManager* pManager);
 void	printAirports(const AirportManager* pManager);
+void	printAirlines(const AirportManager* pManager);
 void	freeManager(AirportManager* pManager);
-void	freeAirportArr(AirportManager* pManager);
+
 #endif

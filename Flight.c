@@ -23,7 +23,7 @@ void	initFlight(Flight* pFlight,Plane* thePlane, const AirportManager* pManager)
 	getCorrectDate(&pFlight->date);
 }
 
-int		isFlightFromSourceAirport(const Flight* pFlight, const char* code)
+int	isFlightFromSourceAirport(const Flight* pFlight, const char* code)
 {
 	if (strcmp(pFlight->sourceCode, code) == 0)
 		return 1;
@@ -32,23 +32,21 @@ int		isFlightFromSourceAirport(const Flight* pFlight, const char* code)
 }
 
 
-int		isFlightToDestAirport(const Flight* pFlight, const char* code)
+int	isFlightToDestAirport(const Flight* pFlight, const char* code)
 {
 	if (strcmp(pFlight->destCode, code) == 0)
 		return 1;
 
 	return 0;
-
-
 }
 
-int		isPlaneTypeInFlight(const Flight* pFlight, ePlaneType type)
+int	isPlaneTypeInFlight(const Flight* pFlight, ePlaneType type)
 {
 	return (pFlight->flightPlane.type == type);
 }
 
 
-void	printFlight(const Flight* pFlight)
+void printFlight(const Flight* pFlight)
 {
 	printf("Flight From %s To %s\t",pFlight->sourceCode, pFlight->destCode);
 	printDate(&pFlight->date);
@@ -72,26 +70,26 @@ Airport* setAiportToFlight(const AirportManager* pManager, const char* msg)
 	return port;
 }
 
-int compareSourceCode(Flight* pFlight1, Flight* pFlight2)
+int compareSourceCode(const void* pFlight1, const void* pFlight2)
 {
-	return strcmp(pFlight1->sourceCode, pFlight2->sourceCode);
+	return strcmp(((const Flight *)pFlight1)->sourceCode, ((const Flight*)pFlight2)->sourceCode);
 }
 
-int compareDestCode(Flight* pFlight1, Flight* pFlight2)
+int compareDestCode(const void* pFlight1, const void* pFlight2)
 {
-	return strcmp(pFlight1->destCode, pFlight2->destCode);
+	return strcmp(((const Flight*)pFlight1)->destCode, ((const Flight*)pFlight2)->destCode);
 }
 
-int compareDate(Flight* pFlight1, Flight* pFlight2)
+int compareDate(const void* pFlight1, const void* pFlight2)
 {
-	if (pFlight1->date.year == pFlight2->date.year) 
+	if (((const Flight*)pFlight1)->date.year == ((const Flight*)pFlight2)->date.year)
 	{
-		if (pFlight1->date.month == pFlight2->date.month)
+		if (((const Flight*)pFlight1)->date.month == ((const Flight*)pFlight2)->date.month)
 		{
-			return pFlight1->date.day - pFlight2->date.day;
+			return ((const Flight*)pFlight1)->date.day - ((const Flight*)pFlight2)->date.day;
 		}
-		return pFlight1->date.month - pFlight2->date.month;
+		return ((const Flight*)pFlight1)->date.month - ((const Flight*)pFlight2)->date.month;
 	}
-	return pFlight1->date.year - pFlight2->date.year;
+	return ((const Flight*)pFlight1)->date.year - ((const Flight*)pFlight2)->date.year;
 	
 }

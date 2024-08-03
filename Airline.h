@@ -8,8 +8,7 @@ typedef enum {
 	eNotSorted, eSourceCode, eDestCode, eDate, eNofSortTypes
 } eSortType;
 
-static const char* SortTypeStr[eNofSortTypes]
-= { "Not Sorted", "Source Code", "Dest Code", "Date" };
+static const char* SortTypeStr[eNofSortTypes] = { "Not Sorted", "Source Code", "Dest Code", "Date" };
 
 typedef struct
 {
@@ -19,22 +18,20 @@ typedef struct
 	int			planeCount;
 	Plane*		planeArr;
 	eSortType   flightSortType;
-}Airline;
+} Airline;
 
 void	initAirline(Airline* pComp);
+int	    initAirlineFromFile(AirportManager* pManager, const char* fileName);
+int     saveAirlineToFile(const Airline* pComp, const char* fileName);
 int		addFlight(Airline* pComp,const AirportManager* pManager);
-int		addPlane(Airline* pComp);
+int		addPlaneToAirline(Airline* pComp);
 Plane*	FindAPlane(Airline* pComp);
-void	printCompany(const Airline* pComp);
-void	printFlightArr(Flight** arr, int size);
-void	printPlanesArr(Plane* arr,int size);
+void	printAirline(const Airline* pComp);
 void	doPrintFlightsWithPlaneType(const Airline* pComp);
 void    sortFlight(Airline* pComp);
 void    findFlight(const Airline* pComp);
 void	freeFlightArr(Flight** arr, int size);
 void	freePlanes(Plane* arr, int size);
-void	freeCompany(Airline* pComp);
-
+void	freeAirline(Airline* pComp);
 
 #endif
-

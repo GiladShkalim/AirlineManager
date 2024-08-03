@@ -32,19 +32,17 @@ int	initAirportNoCode(Airport* pPort)
 {
 	if (!getAirportName(pPort))
 		return 0;
-	pPort->country = getStrExactName("Enter airport country");
+	pPort->country = getStrExactName("Enter airport country: ");
 	if (!pPort->country)
 		return 0;
 	return 1;
 }
 
-void	printAirport(const Airport* pPort)
+void printAirport(const Airport* pPort)
 {
-	printf("Airport name:%-20s\t", pPort->name);
-	printf("Country: %-20s\t Code:%s\n", pPort->country, pPort->code);
-
+	printf("Airport name: %-20s\t", pPort->name);
+	printf("Country: %-10s\tCode: %s\n", pPort->country, pPort->code);
 }
-
 
 int	getAirportName(Airport* pPort)
 {
@@ -55,7 +53,7 @@ int	getAirportName(Airport* pPort)
 
 	while (count == 0)
 	{
-		printf("Enter airport name\n");
+		printf("Enter airport name: ");
 		myGets(temp, MAX_STR_LEN);
 		wordsArray = splitCharsToWords(temp, &count, &totalLength);
 	}
@@ -134,7 +132,7 @@ void getAirportCode(char* code)
 	int ok = 1;
 	do {
 		ok = 1;
-		printf("Enter airport code  - %d UPPER CASE letters\t", IATA_LENGTH);
+		printf("Enter airport code (%d UPPER CASE letters): ", IATA_LENGTH);
 		myGets(temp, MAX_STR_LEN);
 		if (strlen(temp) != IATA_LENGTH)
 		{

@@ -32,21 +32,21 @@ BOOL L_init(LIST* pList)
 //			a value to be stored in the new node
 // Output:	pointer to the new node
 /////////////////////////////////////////////////////////////////
-NODE* L_insert(NODE* pNode, DATA Value)
+void L_insert(LIST* list, DATA Value)
 {
 	NODE* tmp;
+	NODE* pNode = &(list->head);
 
-	if ( !pNode ) 
-		return NULL;
+	if (!pNode) 
+		return;
 
 	tmp = (NODE*)malloc(sizeof(NODE));	// new node
 
-	if ( tmp != NULL )  {
+	if (tmp != NULL)  {
 		tmp->key = Value;
 		tmp->next = pNode->next;
 		pNode->next = tmp;
 	}
-	return tmp;
 }
 
 
