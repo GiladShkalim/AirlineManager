@@ -8,8 +8,7 @@ typedef enum {
 	eCommercial, eCargo, eMilitary, eNofPlaneTypes 
 } ePlaneType;
 
-static const char* PlaneTypeStr[eNofPlaneTypes]
-		= { "Commercial", "Cargo", "Military" };
+static const char* PlaneTypeStr[eNofPlaneTypes] = { "Commercial", "Cargo", "Military" };
 
 
 typedef struct
@@ -26,4 +25,3 @@ Plane*			findPlaneBySN(Plane* planeArr, int count, int sn);
 int				isSerialNumUnique(Plane* planeArr, int planeCount, int num);
 void			printPlane(const Plane* pPlane);
 void			freePlane(Plane* pPlane);
-

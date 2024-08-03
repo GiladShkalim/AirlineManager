@@ -7,10 +7,17 @@
 #ifndef _LIST_
 #define _LIST_
 
-#include "def.h"
+#include "General.h"
 
 
 /*** Definitions ***/
+
+// Node
+typedef struct node
+{
+	DATA			key;
+	struct node* next;
+}NODE;
 
 // List
 typedef struct 
@@ -23,7 +30,7 @@ typedef struct
 
 BOOL L_init(LIST* pList);					// create new list
 
-NODE* L_insert(NODE* pNode, DATA Value);	// add new node after *pNode
+void L_insert(LIST* list, DATA Value);	// add new node after *pNode
 
 BOOL L_delete(NODE* pNode);					// erase node after *pNode
 

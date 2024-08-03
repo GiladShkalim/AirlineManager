@@ -5,13 +5,13 @@
 
 typedef struct
 {
-	int			day;
-	int			month;
-	int			year;
+	int	day;
+	int	month;
+	int	year;
 }Date;
 
-void	getCorrectDate(Date* pDate);
-int		checkDate(char* date, Date* pDate);
-void	printDate(const Date* pDate);
+void getCorrectDate(Date* pDate);
+int checkDate(char* date, Date* pDate);
+void printDate(const Date* pDate);
 
 #endif

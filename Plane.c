@@ -17,13 +17,13 @@ ePlaneType getPlaneType()
 	int option;
 	printf("\n\n");
 	do {
-		printf("Please enter one of the following types\n");
+		printf("Please enter one of the following types:\n");
 		for (int i = 0; i < eNofPlaneTypes; i++)
 			printf("%d for %s\n", i, PlaneTypeStr[i]);
 		scanf("%d", &option);
 	} while (option < 0 || option >= eNofPlaneTypes);
 	getchar();
-	return (ePlaneType) option;
+	return (ePlaneType)option;
 }
 
 const char*		GetPlaneTypeStr(int type)
@@ -38,7 +38,7 @@ int getPlaneSN(Plane* planeArr, int planeCount)
 	int num;
 	int unique = 0;
 	do {
-		printf("Enter plane serial number - between %d to %d\n",MIN_SN,MAX_SN);
+		printf("Enter plane serial number - between %d to %d\n", MIN_SN, MAX_SN);
 		scanf("%d", &num);
 		if (num >= MIN_SN && num <= MAX_SN)
 			unique = isSerialNumUnique(planeArr, planeCount, num);
@@ -46,7 +46,7 @@ int getPlaneSN(Plane* planeArr, int planeCount)
 	return num;
 }
 
-int		isSerialNumUnique(Plane* planeArr, int planeCount, int num)
+int	isSerialNumUnique(Plane* planeArr, int planeCount, int num)
 {
 	for (int i = 0; i < planeCount; i++)
 	{
@@ -64,10 +64,9 @@ Plane* findPlaneBySN(Plane* planeArr, int count, int sn)
 	return NULL;
 }
 
-void	printPlane(const Plane* pPlane)
+void printPlane(const Plane* pPlane)
 {
-	printf("Plane: serial number:%d, type %s\n",pPlane->serialNum, PlaneTypeStr[pPlane->type]);
-
+	printf("Plane: serial number: %d, type %s\n",pPlane->serialNum, PlaneTypeStr[pPlane->type]);
 }
 
 void			freePlane(Plane* pPlane) 

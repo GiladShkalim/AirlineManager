@@ -10,7 +10,7 @@ char* getStrExactName(const char* msg)
 {
 	char* str;
 	char temp[MAX_STR_LEN];
-	printf("%s\t", msg);
+	printf("%s", msg);
 	myGets(temp, MAX_STR_LEN);
 
 	str = getDynStr(temp);
