@@ -1,12 +1,12 @@
 #include <stdlib.h>
 #include "Person.h"
 
-Person getPerson()
+Person getPerson(char* message)
 {
 	Person person;
 
-	printf("Person name: ");
-	scanf("%s", person.name);
+	printf(message);
+	myGets(person.name, MAX_STR_LEN);
 
 	person.id = rand() % 100000;
 
@@ -15,5 +15,5 @@ Person getPerson()
 
 void printPerson(Person person)
 {
-	printf("Name: %15s\tID: %8d\n", person.name, person.id);
+	printf("Name - %s, ID - %d", person.name, person.id);
 }

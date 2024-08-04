@@ -4,8 +4,6 @@
 #include <ctype.h>
 #include "General.h"
 
-
-
 char* getStrExactName(const char* msg)
 {
 	char* str;
@@ -49,6 +47,16 @@ char* myGets(char* buffer, int size)
 	return NULL;
 }
 
+void getStringFromBinaryFile(char* buffer, FILE* pFile)
+{
+	int i = 0;
+	fread(buffer, 1, 1, pFile);
+	while (buffer[i] != '\0') {
+		i++;
+		fread(buffer + i, 1, 1, pFile);
+	}
+}
+
 char** splitCharsToWords(char* str, int* pCount, int* pTotalLength)
 {
 	char temp[255];
@@ -89,11 +97,9 @@ char*  myGetsFile(char* buffer, int size, FILE* pFile)
 	return NULL;
 }
 
-
 void generalArrayFunction(void* array, int numElements, int elementSize, void(*f)(void* element))
 {
 	char* current = (char*)array;
 	for (int i = 0; i < numElements; i++)
-		f((current)+i * elementSize);
+		f((current) + i * elementSize);
 }
-

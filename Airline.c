@@ -16,11 +16,10 @@ void initAirline(Airline* pComp)
 	pComp->planeCount = 0;
 }
 
-int	addFlight(Airline* pComp,const AirportManager* pManager)
+int	addFlightToAirline(Airline* pComp, const AirportManager* pManager)
 {
-	if(pComp->planeCount == 0)
-	{
-		printf("There is no plane in company\n");
+	if(pComp->planeCount == 0) {
+		printf("There is no plane in airline %s.\n", pComp->name);
 		return 0;
 	}
 
@@ -28,9 +27,8 @@ int	addFlight(Airline* pComp,const AirportManager* pManager)
 	if (!pFlight)
 		return 0;
 	
-	Plane* thePlane = FindAPlane(pComp);
-	printAirports(pManager);
-	initFlight(pFlight, thePlane,pManager);
+	Plane* thePlane = findPlane(pComp);
+	initFlight(pFlight, thePlane, pManager);
 
 	pComp->flightArr = (Flight**)realloc(pComp->flightArr, (pComp->flightCount + 1) * sizeof(Flight*));
 	if (!pComp->flightArr)
@@ -53,7 +51,7 @@ int	addPlaneToAirline(Airline* pComp)
 	return 1;
 }
 
-Plane* FindAPlane(Airline* pComp)
+Plane* findPlane(Airline* pComp)
 {
 	printf("Type the plane serial number: ");
 	int sn;
@@ -82,30 +80,11 @@ void printAirline(const Airline* pComp)
 	printf("      Has %d flights:\n", pComp->flightCount);
 	for (int i = 0; i < pComp->flightCount; i++) {
 		printf("          ");
-		printFlight(&((*pComp->flightArr)[i]));
+		printFlight(pComp->flightArr[i]);
 	}
 }
 
-void doPrintFlightsWithPlaneType(const Airline* pComp)
-{
-	ePlaneType type = getPlaneType();
-	int count = 0;
-	printf("Flights with plane type %s:\n", GetPlaneTypeStr(type));
-	for (int i = 0; i < pComp->flightCount; i++)
-	{
-		if (isPlaneTypeInFlight(pComp->flightArr[i], type))
-		{
-			printFlight(pComp->flightArr[i]);
-			count++;
-		}
-	}
-	if(count == 0)
-		printf("Sorry - could not find a flight with plane type %s:\n", GetPlaneTypeStr(type));
-	printf("\n");
-}
-
-void    sortFlight(Airline* pComp)
-{
+void airlineSortAirlineFlights(Airline* pComp) {
 	int option;
 	if (!pComp)
 		return;
@@ -217,24 +196,21 @@ void freeAirline(Airline* pComp)
 
 int initAirlineFromFile(AirportManager* pManager, const char* fileName) {
 	FILE* file = fopen(fileName, "r");
-	if (!file) return 0;
+	if (!file)
+		return 0;
 
 	int totalAirports;
 	fscanf(file, "%d", &totalAirports);
 
 	for (int i = 0; i < totalAirports; i++) {
 		char nameBuffer[256], countryBuffer[256], codeBuffer[IATA_LENGTH + 1];
-
 		fscanf(file, "%255s %255s %s", nameBuffer, countryBuffer, codeBuffer);
-
 		Airport tempAirport = {
 			.name = nameBuffer,
 			.country = countryBuffer
 		};
 		strncpy(tempAirport.code, codeBuffer, IATA_LENGTH);
 		tempAirport.code[IATA_LENGTH] = '\0';
-
-		// addAirportToList(pManager, &tempAirport);
 	}
 
 	fclose(file);

@@ -6,7 +6,7 @@
 
 
 
-void	initPlane(Plane* pPlane, Plane* planeArr, int planeCount)
+void initPlane(Plane* pPlane, Plane* planeArr, int planeCount)
 {
 	pPlane->serialNum = getPlaneSN(planeArr, planeCount);
 	pPlane->type = getPlaneType();
@@ -15,9 +15,9 @@ void	initPlane(Plane* pPlane, Plane* planeArr, int planeCount)
 ePlaneType getPlaneType()
 {
 	int option;
-	printf("\n\n");
+	printf("\n");
 	do {
-		printf("Please enter one of the following types:\n");
+		printf("Enter one of the following types:\n");
 		for (int i = 0; i < eNofPlaneTypes; i++)
 			printf("%d for %s\n", i, PlaneTypeStr[i]);
 		scanf("%d", &option);
@@ -66,7 +66,7 @@ Plane* findPlaneBySN(Plane* planeArr, int count, int sn)
 
 void printPlane(const Plane* pPlane)
 {
-	printf("Plane: serial number: %d, type %s\n",pPlane->serialNum, PlaneTypeStr[pPlane->type]);
+	printf("Plane: serial number - %d, type - %s\n",pPlane->serialNum, PlaneTypeStr[pPlane->type]);
 }
 
 void			freePlane(Plane* pPlane) 

@@ -8,19 +8,23 @@
 
 void	initFlight(Flight* pFlight,Plane* thePlane, const AirportManager* pManager)
 {
-	Airport* pPortOr = setAiportToFlight(pManager, "Enter code of origin airport:");
+	pFlight->flightPlane = *thePlane;
+
+	Airport* pPortOr = setAiportToFlight(pManager, "Origin airport - ");
 	strcpy(pFlight->sourceCode, pPortOr->code);
 	int same;
 	Airport* pPortDes;
 	do {
-		pPortDes = setAiportToFlight(pManager, "Enter code of destination airport:");
+		pPortDes = setAiportToFlight(pManager, "Destination airport - ");
 		same = isSameAirport(pPortOr, pPortDes);
 		if (same)
-			printf("Same origin and destination airport\n");
+			printf("Same origin and destination airport - try again:\n");
 	} while (same);
 	strcpy(pFlight->destCode, pPortDes->code);
-	pFlight->flightPlane = *thePlane;
+
 	getCorrectDate(&pFlight->date);
+
+	pFlight->pilot = getPerson("Enter pilot name: ");
 }
 
 int	isFlightFromSourceAirport(const Flight* pFlight, const char* code)
@@ -48,9 +52,13 @@ int	isPlaneTypeInFlight(const Flight* pFlight, ePlaneType type)
 
 void printFlight(const Flight* pFlight)
 {
-	printf("Flight From %s To %s\t",pFlight->sourceCode, pFlight->destCode);
+	printf("Flight From %s To %s",pFlight->sourceCode, pFlight->destCode);
+	printf("  |  ");
 	printDate(&pFlight->date);
-	printf("\t");
+	printf("  |  ");
+	printf("Pilot: ");
+	printPerson(pFlight->pilot);
+	printf("  |  ");
 	printPlane(&pFlight->flightPlane);
 }
 
@@ -60,11 +68,11 @@ Airport* setAiportToFlight(const AirportManager* pManager, const char* msg)
 	Airport* port;
 	do
 	{
-		printf("%s\t", msg);
+		printf("%s", msg);
 		getAirportCode(code);
 		port = findAirportByCode(pManager, code);
 		if (port == NULL)
-			printf("No airport with this code - try again\n");
+			printf("No airport with this code - try again:\n");
 	} while (port == NULL);
 
 	return port;

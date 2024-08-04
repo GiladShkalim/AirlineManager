@@ -2,11 +2,9 @@
 /*   list.c   */
 /**************/
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
-
 
 //////////////////////////////////////////
 // Init
@@ -23,7 +21,6 @@ BOOL L_init(LIST* pList)
 	pList->head.key = NULL;
 	return True;
 }
-
 
 /////////////////////////////////////////////////////////////////
 // Insert
@@ -49,7 +46,6 @@ void L_insert(LIST* list, DATA Value)
 	}
 }
 
-
 //////////////////////////////////////////////////////////////
 // Delete
 // Aim:		erase node
@@ -74,7 +70,6 @@ BOOL L_delete(NODE* pNode)
 	return True;
 }
 
-
 /////////////////////////////////////////////////////////
 // Find
 // Aim:		search for a value
@@ -96,7 +91,6 @@ const NODE* L_find(const NODE* pNode, DATA Value)
 	return NULL;
 }
 
-
 ////////////////////////////////////////////////
 // Free (additional function)
 // Aim:		free the list memory
@@ -117,29 +111,19 @@ BOOL L_free(LIST* pList)
 	return True;
 }
 
-
-////////////////////////////////////////////////
-// Print (additional function)
-// Aim:		print the list content (assume the DATA is int)
-// Input:	pointer to the list structure
-// Output:	a number of the printed elements
-////////////////////////////////////////////////
-int L_print(const LIST* pList)
+int L_count(LIST* pList)
 {
-	NODE	*tmp;
-	int		c = 0;
+	NODE* tmp;
+	int	c = 0;
 
-	if ( !pList ) 
-		return False;
+	if (!pList)
+		return 0;
 
-	printf("\n");
 	tmp = pList->head.next;
-	while(tmp != NULL)
+	while (tmp != NULL)
 	{
-		printf(" %d ---> ", tmp->key);
 		c++;
 		tmp = tmp->next;
 	}
-	printf("\n");
 	return c;
 }

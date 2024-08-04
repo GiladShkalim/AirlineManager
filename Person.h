@@ -8,7 +8,7 @@ typedef struct {
 	char name[MAX_STR_LEN];
 } Person;
 
-Person getPerson();
+Person getPerson(char* message);
 void printPerson(Person person);
 
 #endif

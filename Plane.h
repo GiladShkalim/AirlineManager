@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __PLANE__
+#define __PLANE__
 
 #define CODE_LENGTH 8
 #define MIN_SN 1
@@ -25,3 +26,5 @@ Plane*			findPlaneBySN(Plane* planeArr, int count, int sn);
 int				isSerialNumUnique(Plane* planeArr, int planeCount, int num);
 void			printPlane(const Plane* pPlane);
 void			freePlane(Plane* pPlane);
+
+#endif

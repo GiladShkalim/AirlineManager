@@ -23,7 +23,7 @@ int	initManagerFromTextFile(AirportManager* pManager, const char* fileName)
 {
 	char buffer[MAX_STR_LEN];
 	FILE* pFile;
-	int numOfAirports;
+	int num;
 
 	pFile = fopen(fileName,"r");
 	if (!pFile) {
@@ -35,14 +35,14 @@ int	initManagerFromTextFile(AirportManager* pManager, const char* fileName)
 		return 0;
 	}
 
+	// load airports
 	if (!fgets(buffer, MAX_STR_LEN, pFile)) {
 		fclose(pFile);
 		freeManager(pManager);
 		return 0;
 	}
-
-	numOfAirports = atoi(buffer);
-	for (int i = 0; i < numOfAirports; i++) {
+	num = atoi(buffer);
+	for (int i = 0; i < num; i++) {
 		Airport* newAirport = (Airport*)malloc(sizeof(Airport));
 		if (!newAirport) {
 			fclose(pFile);
@@ -57,6 +57,98 @@ int	initManagerFromTextFile(AirportManager* pManager, const char* fileName)
 			return 0;
 		}
 		L_insert(&(pManager->airports), newAirport);
+	}
+
+	if (!fgets(buffer, MAX_STR_LEN, pFile)) {
+		fclose(pFile);
+		freeManager(pManager);
+		return 0;
+	}
+
+	// load airlines
+	if (!fgets(buffer, MAX_STR_LEN, pFile)) {
+		fclose(pFile);
+		freeManager(pManager);
+		return 0;
+	}
+	num = atoi(buffer);
+	for (int i = 0; i < num; i++) {
+		Airline* newAirline = (Airline*)malloc(sizeof(Airline));
+		if (!newAirline) {
+			fclose(pFile);
+			freeManager(pManager);
+			return 0;
+		}
+		fgets(buffer, MAX_STR_LEN, pFile);
+		buffer[strlen(buffer) - 1] = '\0';
+		newAirline->name = (char*)malloc(sizeof(char) * (strlen(buffer) + 1));
+		if (!newAirline->name) {
+			fclose(pFile);
+			free(newAirline);
+			freeManager(pManager);
+			return 0;
+		}
+		strcpy(newAirline->name, buffer);
+		newAirline->flightArr = NULL;
+		newAirline->flightCount = 0;
+		newAirline->planeArr = NULL;
+		newAirline->planeCount = 0;
+		L_insert(&(pManager->airlines), newAirline);
+	}
+
+	fclose(pFile);
+	return 1;
+}
+
+int initManagerFromBinFile(AirportManager* pManager, const char* fileName)
+{
+	char buffer[MAX_STR_LEN];
+	FILE* pFile;
+	int num;
+
+	pFile = fopen(fileName, "r");
+	if (!pFile) {
+		return 0;
+	}
+
+	if (!initManager(pManager)) {
+		fclose(pFile);
+		return 0;
+	}
+
+	// load airports
+	fread(&num, sizeof(int), 1, pFile);
+	for (int i = 0; i < num; i++) {
+		Airport* newAirport = (Airport*)malloc(sizeof(Airport));
+		if (!newAirport) {
+			fclose(pFile);
+			freeManager(pManager);
+			return 0;
+		}
+		getStringFromBinaryFile(buffer, pFile);
+		newAirport->name = getDynStr(buffer);
+		getStringFromBinaryFile(buffer, pFile);
+		newAirport->country = getDynStr(buffer);
+		getStringFromBinaryFile(newAirport->code, pFile);
+		L_insert(&(pManager->airports), newAirport);
+	}
+
+	// load airlines
+	fread(&num, sizeof(int), 1, pFile);
+	for (int i = 0; i < num; i++) {
+		Airline* newAirline = (Airline*)malloc(sizeof(Airline));
+		if (!newAirline) {
+			fclose(pFile);
+			freeManager(pManager);
+			return 0;
+		}
+		getStringFromBinaryFile(buffer, pFile);
+		newAirline->name = getDynStr(buffer);
+		newAirline->flightArr = NULL;
+		newAirline->flightCount = 0;
+		newAirline->planeArr = NULL;
+		newAirline->planeCount = 0;
+		L_insert(&(pManager->airlines), newAirline);
 	}
 
 	fclose(pFile);
@@ -80,25 +172,67 @@ int loadAirportFromFile(Airport* pAir, FILE* pFile)
 	return 1;
 }
 
-int saveManagerToFile(const AirportManager* pManager, const char* fileName) {
+int saveManagerToTextFile(AirportManager* pManager, const char* fileName) {
 	int count = 0;
 
 	FILE* file = fopen(fileName, "w");
     if (!file)
 		return 0;
 	
+    fprintf(file, "%d\n", L_count(&(pManager->airports)));
 	NODE* current = pManager->airports.head.next;
-	
 	while (current != NULL) {
 		count++;
 		Airport* airport = (Airport*)current->key;
         fprintf(file, "%s\n%s\n%s\n", airport->name, airport->country, airport->code);
         current = current->next;
     }
-	rewind(file);
-    fprintf(file, "%d\n", count);
+
+	fprintf(file, "\n%d\n", L_count(&(pManager->airlines)));
+	current = pManager->airlines.head.next;
+	while (current != NULL) {
+		count++;
+		Airline* airline = (Airline*)current->key;
+		fprintf(file, "%s\n", airline->name);
+		current = current->next;
+	}
+
 	fclose(file);
     return 1;
+}
+
+int saveManagerToBinFile(AirportManager* pManager, const char* fileName)
+{
+	int count = 0;
+
+	FILE* file = fopen(fileName, "w");
+	if (!file)
+		return 0;
+
+	count = L_count(&(pManager->airports));
+	fwrite(&count, sizeof(int), 1 ,file);
+	NODE* current = pManager->airports.head.next;
+	while (current != NULL) {
+		count++;
+		Airport* airport = (Airport*)current->key;
+		fwrite(airport->name, strlen(airport->name) + 1, 1, file);
+		fwrite(airport->country, strlen(airport->country) + 1, 1, file);
+		fwrite(airport->code, strlen(airport->code) + 1, 1, file);
+		current = current->next;
+	}
+
+	count = L_count(&(pManager->airlines));
+	fwrite(&count, sizeof(int), 1, file);
+	current = pManager->airlines.head.next;
+	while (current != NULL) {
+		count++;
+		Airline* airline = (Airline*)current->key;
+		fwrite(airline->name, strlen(airline->name) + 1, 1, file);
+		current = current->next;
+	}
+
+	fclose(file);
+	return 1;
 }
 
 void addAirportToList(AirportManager* pManager, Airport* airport) {
@@ -122,7 +256,7 @@ int initAirport(Airport* pPort, AirportManager* pManager)
 	while (1)
 	{
 		getAirportCode(pPort->code);
-		if (checkUniqeCode(pPort->code, pManager))
+		if (!findAirportByCode(pManager, pPort->code))
 			break;
 		printf("This code already in use - enter a different code\n");
 	}
@@ -208,6 +342,30 @@ int addPlaneToManager(AirportManager* pManager)
 	return addPlaneToAirline(airline);
 }
 
+int addFlightToManager(AirportManager* pManager)
+{
+	printf("Enter the name of the airline to add the flight to: ");
+	char name[MAX_STR_LEN];
+	myGets(name, MAX_STR_LEN);
+
+	NODE* current = pManager->airlines.head.next;
+	Airline* airline = NULL;
+	while (current != NULL) {
+		if (strcmp(((Airline*)(current->key))->name, name) == 0) {
+			airline = (Airline*)(current->key);
+			break;
+		}
+		current = current->next;
+	}
+
+	if (!airline) {
+		printf("Airline %s does not exists.\n", name);
+		return 0;
+	}
+
+	return addFlightToAirline(airline, pManager);
+}
+
 Airport* findAirportByCode(const AirportManager* pManager, const char* code) {
     NODE* current = pManager->airports.head.next;
     while (current != NULL) {
@@ -223,50 +381,63 @@ Airport* findAirportByCode(const AirportManager* pManager, const char* code) {
 int checkUniqeCode(const char* code,const AirportManager* pManager)
 {
 	Airport* port = findAirportByCode(pManager, code);
-
 	if (port != NULL)
 		return 0;
-
 	return 1;
 }
 
-void printAirports(const AirportManager* pManager) {
+int managerSortAirlineFlights(AirportManager* pManager)
+{
+	airlineSortAirlineFlights();
+}
+
+void printAirports(AirportManager* pManager) {
     int count = 0;
     NODE* current = pManager->airports.head.next;
 	printf("Airports:\n");
+    printf("There are %d airports:\n", L_count(&(pManager->airports)));
     while (current != NULL) {
-        count++;
-		printf("\t%2d. ", count);
+		count++;
+		printf("    %2d. ", count);
         printAirport((Airport*)current->key);
         current = current->next;
     }
-    printf("There are %d airports.\n", count);
 }
 
-void printAirlines(const AirportManager* pManager)
+void printAirlines(AirportManager* pManager)
 {
 	int count = 0;
 	NODE* current = pManager->airlines.head.next;
-	printf("Airlines:\n");
+	printf("There are %d airlines:\n", L_count(&(pManager->airlines)));
 	while (current != NULL) {
 		count++;
 		printf("  %2d. ", count);
 		printAirline((Airline*)current->key);
 		current = current->next;
 	}
-	printf("There are %d airlines.\n", count);
-
 }
 
 void freeManager(AirportManager* pManager)
 {
+	if (!pManager) {
+		return;
+	}
+
     NODE* current = pManager->airports.head.next;
     while (current != NULL) {
         NODE* toFree = current;
         freeAirport((Airport*)current->key);
-        free(current->key);
         current = current->next;
         free(toFree);
     }
     pManager->airports.head.next = NULL;
+
+	current = pManager->airlines.head.next;
+	while (current != NULL) {
+		NODE* toFree = current;
+		freeAirline((Airline*)current->key);
+		current = current->next;
+		free(toFree);
+	}
+	pManager->airlines.head.next = NULL;
 }
