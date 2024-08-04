@@ -11,6 +11,7 @@ typedef enum { False, True } BOOL;	// a boolean type
 
 char*	getStrExactName(const char* msg);
 char*	myGets(char* buffer, int size);
+void getStringFromBinaryFile(char* buffer, FILE* pFile);
 char*	getDynStr(char* str);
 char**	splitCharsToWords(char* str,int* pCount,int* pTotalLength);
 char*  myGetsFile(char* buffer, int size, FILE* pFile);

@@ -23,12 +23,11 @@ typedef struct
 void	initAirline(Airline* pComp);
 int	    initAirlineFromFile(AirportManager* pManager, const char* fileName);
 int     saveAirlineToFile(const Airline* pComp, const char* fileName);
-int		addFlight(Airline* pComp,const AirportManager* pManager);
+int		addFlightToAirline(Airline* pComp,const AirportManager* pManager);
 int		addPlaneToAirline(Airline* pComp);
-Plane*	FindAPlane(Airline* pComp);
+Plane*	findPlane(Airline* pComp);
 void	printAirline(const Airline* pComp);
-void	doPrintFlightsWithPlaneType(const Airline* pComp);
-void    sortFlight(Airline* pComp);
+void    airlineSortAirlineFlights(Airline* pComp);
 void    findFlight(const Airline* pComp);
 void	freeFlightArr(Flight** arr, int size);
 void	freePlanes(Plane* arr, int size);

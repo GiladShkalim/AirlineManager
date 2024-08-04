@@ -13,12 +13,12 @@ void getCorrectDate(Date* pDate)
 	int ok = 1;
 
 	do {
-		printf("Enter Flight Date dd%c%cmm%c%cyyyy  minimum year %d\t",
+		printf("Enter flight date dd%c%cmm%c%cyyyy, minimum year %d: ",
 			SPECIAL_TAV, SPECIAL_TAV, SPECIAL_TAV, SPECIAL_TAV, MIN_YEAR);
 		myGets(date, MAX_STR_LEN);
 		ok = checkDate(date, pDate);
 		if (!ok)
-			printf("Error try again\n");
+			printf("Invalid date - try again:\n");
 	} while (!ok);
 }
 
