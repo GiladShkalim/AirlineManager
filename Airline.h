@@ -17,7 +17,6 @@ typedef struct
 	Flight**	flightArr;
 	int			planeCount;
 	Plane*		planeArr;
-	eSortType   flightSortType;
 } Airline;
 
 void	initAirline(Airline* pComp);
@@ -27,7 +26,7 @@ int		addFlightToAirline(Airline* pComp,const AirportManager* pManager);
 int		addPlaneToAirline(Airline* pComp);
 Plane*	findPlane(Airline* pComp);
 void	printAirline(const Airline* pComp);
-void    airlineSortAirlineFlights(Airline* pComp);
+int    airlineSortAirlineFlights(Airline* pComp);
 void    findFlight(const Airline* pComp);
 void	freeFlightArr(Flight** arr, int size);
 void	freePlanes(Plane* arr, int size);

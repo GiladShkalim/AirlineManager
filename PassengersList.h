@@ -14,6 +14,6 @@ typedef struct {
 } PassengersList;
 
 int addPassenger(PassengersList* list, Person person);
-void printPassengers(PassengersList* list);
+void printPassengers(PassengersList list);
 
 #endif

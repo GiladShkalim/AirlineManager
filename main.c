@@ -12,15 +12,13 @@
 
 #define CHECK(res) if (!res) printf("\n      ERROR\n")
 
-int initManagerAndAirline(AirportManager* pManager, Airline* pCompany);
-
 int main()
 {
 	AirportManager manager;
 	initManager(&manager);
 	Airline company;
 
-	int opt = 1, res;
+	int opt = 1;
 
 	while (opt != 0) {
 		printf("\n-------------------------------------\n\n");
@@ -37,6 +35,7 @@ int main()
 		printf("  9 - Add airline\n");
 		printf(" 10 - Add plane\n");
 		printf(" 11 - Add flight\n");
+		printf(" 12 - Sort airline flights\n");
 
 		/*printf("  2 - Print Airline\n");
 		printf("  4 - Add Flight Save\n");
@@ -45,7 +44,10 @@ int main()
 		printf("  7 - Find\n");*/
 
 
-		scanf("%d", &opt);
+		if (scanf("%d", &opt) != 1) {
+			printf("Invalid input.\n");
+			break;
+		}
 
 		switch (opt)
 		{
@@ -99,14 +101,11 @@ int main()
 			CHECK(addFlightToManager(&manager));
 			break;
 
-
+		case 12:
+			CHECK(managerSortAirlineFlights(&manager));
+			break;
 
 		case 700:
-			if (!initManagerAndAirline(&manager, &company))
-			{
-				printf("error init");
-				return 0;
-			}
 			findFlight(&company);
 			airlineSortAirlineFlights(&company);
 			printf("\n");
@@ -126,20 +125,4 @@ int main()
 	freeManager(&manager);
 
 	return 0;
-}
-
-int initManagerAndAirline(AirportManager* pManager, Airline* pCompany)
-{
-	int res = initManagerFromTextFile(pManager, MANAGER_TEXT_FILE_NAME_SRC);
-	if (!res)
-	{
-		printf("error init manager\n");
-		return 0;
-	}
-
-	if (res == MANAGER_TEXT_FILE_NAME_DST)
-		return initAirlineFromFile(pCompany, pManager, MANAGER_BIN_FILE_NAME_SRC);
-	else
-		initAirline(pCompany);
-	return 1;
 }

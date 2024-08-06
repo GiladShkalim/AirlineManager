@@ -1,2 +1,0 @@
-Lital_Khotyakov_316238260
-Gilad_Shekalim_207602020 

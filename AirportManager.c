@@ -386,9 +386,62 @@ int checkUniqeCode(const char* code,const AirportManager* pManager)
 	return 1;
 }
 
+Flight** getSortedFlights(AirportManager* pManager, int option, int *n)
+{
+	int num = 0;
+	NODE* current = pManager->airlines.head.next;
+	while (current != NULL) {
+		num += ((Airline*)(current->key))->flightCount;
+		current = current->next;
+	}
+	*n = num;
+
+	Flight** arr = (Flight**)malloc(sizeof(Flight*) * num);
+	current = pManager->airlines.head.next;
+	num = 0;
+	while (current != NULL) {
+		for (int i = 0; i < ((Airline*)(current->key))->flightCount; i++) {
+			arr[num + i] = ((Airline*)(current->key))->flightArr[i];
+		}
+		num += ((Airline*)(current->key))->flightCount;
+		current = current->next;
+	}
+
+	switch (option)
+	{
+	case 1:  // Source Code
+		qsort(arr, num, sizeof(Flight*), compareSourceCode);
+		break;
+	case 2:  // Dest Code
+		qsort(arr, num, sizeof(Flight*), compareDestCode);
+		break;
+	case 3:  // Date
+		qsort(arr, num, sizeof(Flight*), compareDate);
+		break;
+	}
+
+	return arr;
+}
+
 int managerSortAirlineFlights(AirportManager* pManager)
 {
-	airlineSortAirlineFlights();
+	int option;
+	do {
+		printf("Base on what field do you want to sort?\n");
+		for (int i = 1; i < eNofSortTypes; i++)
+			printf("Enter %d for %s\n", i, SortTypeStr[i]);
+		scanf("%d", &option);
+	} while (option < 1 || option >= eNofSortTypes);
+
+	int num;
+	Flight** flights = getSortedFlights(pManager, option, &num);
+
+	for (int i = 0; i < num; i++) {
+		printf("    %d. ", i);
+		printFlight(flights[i]);
+	}
+
+	return 1;
 }
 
 void printAirports(AirportManager* pManager) {

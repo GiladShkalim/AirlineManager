@@ -26,11 +26,13 @@ int addPassenger(PassengersList* list, Person person) {
 	return 1;
 }
 
-void printPassengers(PassengersList* list)
+void printPassengers(PassengersList list)
 {
-	PassengerNode* current = list->head;
+	PassengerNode* current = list.head;
 	while (current != NULL) {
+		printf("                  ");
 		printPerson(current->person);
+		printf("\n");
 		current = current->next;
 	}
 }

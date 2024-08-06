@@ -28,6 +28,10 @@ int	addFlightToAirline(Airline* pComp, const AirportManager* pManager)
 		return 0;
 	
 	Plane* thePlane = findPlane(pComp);
+	if (!thePlane) {
+		free(pFlight);
+		return 0;
+	}
 	initFlight(pFlight, thePlane, pManager);
 
 	pComp->flightArr = (Flight**)realloc(pComp->flightArr, (pComp->flightCount + 1) * sizeof(Flight*));
@@ -56,13 +60,10 @@ Plane* findPlane(Airline* pComp)
 	printf("Type the plane serial number: ");
 	int sn;
 	Plane* temp = NULL;
-	do {
-		scanf("%d", &sn);
-		temp = findPlaneBySN(pComp->planeArr,pComp->planeCount, sn);
-		if (!temp)
-			printf("No plane with that serial number! Try again!\n");
-	} while (temp == NULL);
-	 
+	scanf("%d", &sn);
+	temp = findPlaneBySN(pComp->planeArr,pComp->planeCount, sn);
+	if (!temp)
+		printf("This airline doesn't have a plane with this serial number.\n");
 	return temp;
 }
 
@@ -84,36 +85,32 @@ void printAirline(const Airline* pComp)
 	}
 }
 
-void airlineSortAirlineFlights(Airline* pComp) {
+int airlineSortAirlineFlights(Airline* pComp) {
 	int option;
 	if (!pComp)
-		return;
+		return 0;
 
-	printf("\n\n");
 	do {
 		printf("Base on what field do you want to sort?\n");
 		for (int i = 1; i < eNofSortTypes; i++)
 			printf("Enter %d for %s\n", i, SortTypeStr[i]);
 		scanf("%d", &option);
 	} while (option < 1 || option >= eNofSortTypes);
-	getchar();
+	
 	switch (option)
 	{
 	case 1: //Source Code
-		qsort(pComp->flightArr, pComp->flightCount,sizeof(Flight),compareSourceCode);
-		pComp->flightSortType = eSourceCode;
+		qsort(pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareSourceCode);
 		break;
-
 	case 2: //Dest Code
-		qsort(pComp->flightArr, pComp->flightCount, sizeof(Flight), compareDestCode);
-		pComp->flightSortType = eDestCode;
+		qsort(pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareDestCode);
 		break;
-
 	case 3:  //Date
-		qsort(pComp->flightArr, pComp->flightCount, sizeof(Flight), compareDate);
-		pComp->flightSortType = eDate;
+		qsort(pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareDate);
 		break;
 	}
+
+	return 1;
 }
 
 void findFlight(const Airline* pComp)
@@ -123,7 +120,7 @@ void findFlight(const Airline* pComp)
 	if (!pComp)
 		return;
 
-	switch (pComp->flightSortType)
+	switch (eNotSorted)
 	{
 	case eNotSorted:
 		printf("The search cannot be performed, array not sorted\n");
@@ -228,7 +225,7 @@ int saveAirlineToFile(const Airline* pComp, const char* fileName) {
 	fprintf(file, "Airline Name: %s\n", pComp->name);
 
 	// Write flight count and sort type
-	fprintf(file, "Flight Count: %d\nSort Type: %d\n", pComp->flightCount, pComp->flightSortType);
+	fprintf(file, "Flight Count: %d\nSort Type: %d\n", pComp->flightCount, eNotSorted);
 
 	// Write flights information assuming there's a function or way to get flight details in string format
 	fprintf(file, "Flights:\n");
